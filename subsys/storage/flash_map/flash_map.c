@@ -171,9 +171,18 @@ static bool get_sectors_cb(const struct flash_pages_info *info, void *datav)
 
 int flash_area_get_sectors(int idx, uint32_t *cnt, struct flash_sector *ret)
 {
+	int rc;
 	struct layout_data data;
 
-	return flash_area_layout(idx, cnt, ret, get_sectors_cb, &data);
+	rc = flash_area_layout(idx, cnt, ret, get_sectors_cb, &data);
+	if  ( rc ) {
+		return rc;
+	};
+
+	flash_sector->fs_off = data.area_off;
+	flash_sector->fs_size = data.area_len;
+
+	return rc;
 }
 #endif /* CONFIG_FLASH_PAGE_LAYOUT */
 
